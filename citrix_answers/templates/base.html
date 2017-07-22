@@ -1,0 +1,82 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+			
+	    <title>Citrix Answers</title>
+
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="{% static 'assets/css/fancybox/jquery.fancybox.css' %}">
+		<link href="{% static 'assets/css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'assets/css/bootstrap-theme.css' %}" rel="stylesheet" />
+		<link rel="stylesheet" href="{% static 'assets/css/slippry.css' %}">
+		<link href="{% static 'assets/css/style.css' %}" rel="stylesheet" />
+		<link rel="stylesheet" href="{% static 'assets/color/default.css' %}">
+		<script src="{% static 'assets/js/modernizr.custom.js' %}"></script>
+	</head>
+
+	<body>
+	
+	<header>
+		<div id="navigation" class="navbar navbar-inverse navbar-fixed-top default" role="navigation">
+			<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+				<a class="navbar" href="/home/"><img src="{% static 'assets/img/citrix-logo-black.jpg' %}"></img> &nbsp;<span style="font-size:150%;color: white; font-weight: 800;">Answers</a>
+					</div>
+				<div class="navigation">
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"><nav>
+						<ul class="nav navbar-nav navbar-right">
+							<li class="current"><a href="\">Home</a></li>
+						</ul></nav>
+					</div><!-- /.navbar-collapse -->
+				</div>
+			</div>
+		</div>
+	</header>
+	
+	
+		<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><b>Citrix Answers</b></a>
+			</div>
+
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Account <span class="caret"></span></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		</nav>
+		<br>
+		<br>
+		{% block content %}
+		{% endblock %}
+
+	    <!-- Core Scripts - Include with every page -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<!-- <script src="{% static 'assets/js/custom.js' %}"></script> -->
+	    {% block javascript %}
+	    {% endblock %}
+
+	</body>
+</html>

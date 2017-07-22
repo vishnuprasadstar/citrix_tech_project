@@ -1,0 +1,218 @@
+{% load staticfiles %}
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="{% static 'assets/css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'assets/css/question_and_answer.css' %}" rel="stylesheet" />
+		
+		<link rel="stylesheet" href="{% static 'assets/css/questions_list.css' %}">
+		<link rel="javascript" href="{% static 'assets/js/questions_list.js' %}">
+		<link rel="stylesheet" href="{% static 'assets/color/default.css' %}">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+	</head>
+	<html>
+
+		<body>
+			<header>
+				<div id="navigation" class="navbar navbar-inverse navbar-fixed-top default" role="navigation">
+					<div class="container">
+						<!-- Brand and toggle get grouped for better mobile display -->
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+								<a class="navbar-brand" href="/home/"><img src="{% static 'assets/img/citrix-logo-black.jpg' %}"></img>&nbsp;<span style="font-size:80%">Answers</span></a>
+
+						</div>
+						<div class="navigation">
+							<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"><nav>
+								<ul class="nav navbar-nav navbar-right">
+									<li class="current"><a href="/logout">Logout</a></li>
+								</ul></nav>
+							</div><!-- /.navbar-collapse -->
+						</div>
+					</div>
+				</div>
+			</header>
+			<div class="container">
+				<div  class="col-md-4">
+						<div class="container-fluid">
+							<div class="row">
+								<section class="content">
+							<h4 style="font-weight:bold" align="center"></h4>
+
+
+										<div class="row">
+
+											<img src="{% static 'assets/img/profile-pic.jpg' %}" style="width:73%; padding-left:27% "></img>
+												<br>
+												<h4 style="font-weight:bold" align="center">{{ employee.citrix_username }} </h4>
+												{%if employee.rating >= 10 and employee.rating < 50 %}
+												<div align="center">
+												<img src="{% static 'assets/img/rating_level/rookie.png' %}" title="{{employee.rating}}" width="7%" style="vertical-align:middle"> </img> <span style = "vertical-align: middle; font-size:15px">Rookie</span> 
+												</div>
+												{%elif employee.rating >= 50 and employee.rating < 100 %}
+													<div align="center">
+														<img src="{% static 'assets/img/rating_level/beginner.png' %}" title="{{employee.rating}}" width="7%" style="vertical-align:middle"> </img> <span style = "vertical-align: middle; font-size:15px">Beginner</span> 
+													</div>
+												{%elif employee.rating >= 100 and employee.rating < 150 %}
+													<div align="center">
+														<img src="{% static 'assets/img/rating_level/amateur.png' %}" title="{{employee.rating}}" width="7%" style="vertical-align:middle"> </img> <span style = "vertical-align: middle; font-size:15px">Amateur</span> 
+													</div>
+												{%elif employee.rating >= 150 and employee.rating < 200 %}
+													<div align="center">
+														<img src="{% static 'assets/img/rating_level/intermediate.png' %}" title="{{employee.rating}}" width="7%" style="vertical-align:middle"> </img> <span style = "vertical-align: middle; font-size:15px">Intermediate</span> 
+													</div>
+												{%else %}
+													<div align="center">
+														<img src="{% static 'assets/img/rating_level/expert.png' %}" title="{{employee.rating}}" width="7%" style="vertical-align:middle"> </img> <span style = "vertical-align: middle; font-size:15px">Expert</span> 
+													</div>
+												
+												{% endif %}
+												<div>
+												<br>
+												<!-- <table class="table table-striped"> -->
+													<!-- <tbody> -->
+															<!-- <tr><td></td> -->
+															<!-- <td>Designation</td><td>{{ employee.designation }}</td> -->
+															<!-- </tr> -->
+															<!-- <tr><td></td> -->
+																<!-- <td>Team</td><td>{{ employee.team }}</td> -->
+															<!-- </tr> -->
+
+															<!-- <tr><td></td> -->
+																<!-- <td>About</td> -->
+																<!-- <td>{{ employee.description }}</td> -->
+															<!-- </tr>	 -->
+													<!-- </tbody> -->
+													<!-- </table>			 -->
+
+													<ul class="list-group">
+														<li class="list-group-item justify-content-between">
+    <b>Designation</b></br>
+    <span>{{ employee.designation }}</span>
+  </li>
+  <li class="list-group-item justify-content-between">
+  <b> Team</b><br>
+    <span>{{ employee.team }}</span>
+  </li>
+  <li class="list-group-item justify-content-between">
+    <b>Description</b> <br>
+    <span>{{ employee.description }}</span>
+  </li>
+</ul>
+
+												</div>
+												<ul class="list-group">
+  <li class="list-group-item justify-content-between">
+    #Questions Asked
+    <span class="badge badge-default badge-pill">{{ questions_list|length }}</span>
+  </li>
+  <li class="list-group-item justify-content-between">
+   #Questions Answered
+    <span class="badge badge-default badge-pill">{{ answers_list|length }}</span>
+  </li>
+  <li class="list-group-item justify-content-between">
+    #Accepted Answers
+    <span class="badge badge-default badge-pill">{{ accepted_answers_list|length }}</span>
+  </li>
+</ul>
+											</div>
+
+							</section>
+										</div>
+										</div>
+										</div>
+
+					<div class="col-md-4">
+						<div class="container-fluid">
+							<div class="row">
+								<section class="content">
+									<h4 style="font-weight:bold">Questions Answered:</h4>
+									<div class="panel">
+										<div class="table-container">
+											<table class="table table-filter">
+												<tbody>
+													{% for answer in answers_list %}
+													{% if answer.is_solution == 1 and question.has_solution == 1 %}
+														<tr bgcolor="Lavender">
+													{% else %}
+														<tr bgcolor="WhiteSmoke">
+													{% endif %}
+														<td>
+															<div class="media">
+																<div class="media-body">
+																	<a href="/question/{{ answer.question.pk }}">
+																		<h4 class="title" style=" font-weight:normal" >
+																			{{ answer.question.title }}
+																		</h4>
+																	</a>
+																	{% for tag in answer.question.tags.all %}
+																	<span class="pull-left pagado" style="background-color:Lavender">{{ tag.tag_name }}</span>
+																	<span class="pull-left pagado" >&nbsp;&nbsp;&nbsp;&nbsp;</span>
+																	{% endfor %}
+																	<br>
+																	<span class="media-meta" style="margin-top: 10px" > Posted by <a href="/profile/{{ answer.question.user.pk }}">{{ answer.question.user.username }}</a> on {{ answer.question.created_at | date:"D d M Y" }}</span>
+																</div>
+															</div>
+														</td>
+													</tr>
+													{% endfor %}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="col-md-4">
+						<div class="container-fluid">
+							<div class="row">
+								<section class="content">
+									<h4 style="font-weight:bold">Questions Asked:</h4>
+									<div class="panel">
+										<div class="table-container">
+											<table class="table table-filter">
+												<tbody>
+													{% for question in questions_list %}
+													<tr>
+														<td>
+															<div class="media">
+																<div class="media-body">
+																	<a href="/question/{{ question.pk }}">
+																		<h4 class="title" style="font-weight:normal" >
+																			{{ question.title }}
+																		</h4>
+																	</a>
+																	<p class="summary" style="font-align:justify">{{ question.description }}</p>
+																	{% for tag in question.tags.all %}
+																	<span class="pull-left pagado" style="background-color:Lavender">{{ tag.tag_name }}</span>
+																	<span class="pull-left pagado" >&nbsp;&nbsp;&nbsp;&nbsp;</span>
+																	{% endfor %}
+																	<br>
+																	<span class="media-meta" style="margin-top: 10px" > Posted on {{ question.created_at | date:"D d M Y" }}</span>
+																</div>
+															</div>
+														</td>
+													</tr>
+													{% endfor %}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</body>

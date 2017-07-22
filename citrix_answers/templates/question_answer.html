@@ -1,0 +1,258 @@
+{% load staticfiles %}
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href="{% static 'assets/css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'assets/css/question_and_answer.css' %}" rel="stylesheet" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<link rel="stylesheet" href="{% static 'assets/color/default.css' %}">
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+		<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+	</head>
+
+	<header>
+		<div id="navigation" class="navbar navbar-inverse navbar-fixed-top default" role="navigation">
+			<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/home/"><img src="{% static 'assets/img/citrix-logo-black.jpg' %}"></img>&nbsp;<span style="font-size:80%">Answers</span></a>
+				</div>
+				<div class="navigation">
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"><nav>
+					    <ul class="nav navbar-nav navbar-right">
+					      <li class="current"><a href="/profile/{{ request.user.pk }}">{{ request.user.username }}</a></li>
+							<li class="current"><a href="\logout">Logout</a></li>
+							<li class="current"><a href="\home">Back</a></li>
+						</ul></nav>
+					</div><!-- /.navbar-collapse -->
+				</div>
+			</div>
+		</div>
+	</header>
+	<body>
+
+		<div class="container">
+		<div class="row">
+			<div class="col-md-9">
+				<!-- <div class="row"> -->
+				<section class="content">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="media">
+								<div class="media-body">
+									<span style="font-size: 12px"><i class="fa fa-user" style="font-size: 15px" aria-hidden="true"></i>   <a href="/profile/{{ question.user.pk }}">{{  question.user.username }}</a>
+										<span class="media-meta pull-right" style="font-size: 12px">Asked on {{ question.created_at | date:"D d M Y"  }} </span>
+									</span>
+									<div>
+										<div class="col-md-12">
+											<h4><br> <b>{{ question.title }}</b></h4>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-10">
+									<h4 class="summary pull-left">{{ question.description|linebreaks }}</h4>
+								</div>
+							</div>
+							<span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;<b>Tags:</b></span>
+
+							{% for tag in question.tags.all %}
+							<span class="pull-left pagado" style="background-color:Lavender">&nbsp;&nbsp;{{ tag.name }}&nbsp;</span>
+							<span class="pull-left pagado" >&nbsp;&nbsp;</span>
+							{% endfor %}
+							<span class="pull-right">{{ question.views }} <b>view(s)</b></span>
+						</div>
+					</div>
+					</section>
+		<div class="panel-body">
+			<div class="table-container">
+			<h4>{{ answer_list|length }} Answers</h4>
+				<table class="table table-filter col-md-12" style="margin-left: 15px margin-right: 15px;">
+					<tbody>
+						<div class="media">
+							{% for answer in answer_list %}
+							<div class="container-fluid">
+								{% if answer.is_solution == 1 and question.has_solution == 1 %}
+								<tr bgcolor="Lavender">
+									{% else %}
+									<tr bgcolor="WhiteSmoke">
+										{% endif %}
+										<td>
+											<div class="media-body" style="padding: 10px">
+												<span class="media-meta" style="font-size: 12px"><i class="fa fa-user" style="font-size: 15px" aria-hidden="true"></i>  <a href="/profile/{{ answer.user.pk }}">{{ answer.user.username }}</a>
+													<span class="media-meta pull-right" style="font-size: 12px">Answered on {{ answer.created_at | date:"D d M Y"  }} </span>
+												</span>
+
+												<div class="row">
+													{% if answer.is_solution == 1 and question.has_solution == 1 %}
+													<div class="col-md-1" style="margin-right:10px">
+														<br>
+														<i class="fa fa-check" style="font-size: 60px; color:green" aria-hidden="true"></i>
+														<span style="color:black">Accepted Answer</span>
+													</div>
+													<div class="col-md-10">
+														{% else %}
+														<div class="col-md-10 col-md-offset-1">
+															{% endif %}
+															<h4 class="title" style="line-height:1.5" align="justify">
+																<div style="font-size: 15px">{{ answer.content|linebreaks }}</div>
+																<br>
+																<br>
+																<div class="col-md-4 pull-left">
+																	<a href="#" id="{{ answer.id }}_upvotes" class="btn btn-primary btn-md upvotes_button" style="margin-right: 16px">
+																	<i class="fa fa-thumbs-o-up" aria-hidden="true"></i><span>  {{ answer.upvotes }} </span>
+																	</a>
+																	<a href="#" id="{{ answer.id }}_downvotes" class="btn btn-warning btn-md downvotes_button" style="margin-right: 16px">
+																	<i class="fa fa-thumbs-o-down" aria-hidden="true"></i><span>  {{ answer.downvotes }} </span>
+																	</a>
+																	{% if question.user.pk == request.user.pk %}
+																	{% if question.has_solution == 0 %}
+																	<a href="#" id="{{ answer.id }}_accept_solution" class="btn btn-success btn-md solution_button" >
+																		<i class="fa fa-check" style="font-size:16px" aria-hidden="true"></i>
+																	</a>
+																	{% endif %}
+																	{% endif %}
+																</div>
+															</h4>
+														</div>
+
+													</div>
+												</div>
+												</div>
+											</td>
+										</tr>
+
+									{% endfor %}
+									</div>
+								</div>
+								</tbody>
+
+							</table>
+
+				</div>
+				<div class="col-md-0"></div>
+				<div class="col-md-6" style="margin: 15px">
+					<tr><h4><label for="your_name">Your answer: </label></h4>
+						<form action="/add-answer/{{ question.pk }}/" method="post">
+							{% csrf_token %}
+							<textarea id="new_answer" cols="105" rows="6" name="new_answer" class="form-control" placeholder="Enter your answer here.."></textarea><br><br>
+							<input type="submit" class="btn btn-primary  btn-md"value="OK">
+						</form>
+					</tr>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<div class="col-md-3">
+	<br><br><br><br><br><br>
+		<div class="panel">
+							<h4>Related Questions</h4>
+								<div class="table-container">
+									<table class="table table-filter">
+										<tbody>
+											{% for question in tag_related_question %}
+											<tr>
+												<td>
+													<div class="media">
+														<div class="media-body">
+															<a href="/question/{{ question.pk }}">
+																<h4 class="title" style="color=Black" >
+																	{{ question.title }}
+																</h4><span class="glyphicon  pull-right" style="color:crimson">{{ question.views }} View(s)</span>
+																<br>
+															</a>
+															{% for tag in question.tags.all %}
+															<span class="pull-left pagado" style="background-color:Lavender">{{ tag.tag_name }}</span>
+															<span class="pull-left pagado" ></span>
+															{% endfor %}
+															<br>
+															<span class="media-meta" style="margin-top: 10px" > Posted by <a href="/profile/{{ question.user.pk }}">{{ question.user.username }}</a> on {{ question.created_at | date:"D d M Y" }}</span>
+														</div>
+													</div>
+												</td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+	</div>
+	</div>
+	</div>
+</body>
+
+{% block javascript %}
+<script>
+	$(".upvotes_button").click(function(){
+		var answer_id = this.id
+
+		console.log(answer_id)
+
+		$.ajax({
+			url: '/ajax/upvote',
+			data : {
+				'answer_id': answer_id
+			},
+
+			dataType: 'json',
+			success: function(data){
+				$("#"+answer_id).children(0).next().html(data.upvotes);
+	$("#"+answer_id).off()
+	var downvotes_id = answer_id.replace("upvote", "downvote")
+	$("#"+downvotes_id).off()
+			}
+		});
+	});
+
+	$(".downvotes_button").click(function(){
+		var answer_id = this.id
+
+		console.log(answer_id)
+
+		$.ajax({
+			url: '/ajax/downvote',
+			data : {
+				'answer_id': answer_id
+			},
+
+			dataType: 'json',
+			success: function(data){
+				$("#"+answer_id).children(0).next().html(data.downvotes);
+	$("#"+answer_id).off()
+	var upvotes_id = answer_id.replace("downvote", "upvote")
+	$("#"+upvotes_id).off()
+			}
+		});
+	});
+
+
+	$(".solution_button").click(function(){
+		var answer_id = this.id
+
+		console.log(answer_id)
+
+		$.ajax({
+			url: '/ajax/accept_solution',
+			data : {
+				'answer_id': answer_id
+			},
+
+			dataType: 'json',
+			success: function(data){
+				$(".solution_button").hide()
+				window.location.reload();
+			}
+		});
+	});
+</script>
+{% endblock %}
+</html>

@@ -1,0 +1,268 @@
+{% load static %}
+{% load staticfiles %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Citrix Answers</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+		<link rel="stylesheet" href="{% static 'assets/css/questions_list.css' %}">
+		<link rel="javascript" href="{% static 'assets/js/questions_list.js' %}">
+		<!-- styles -->
+		<link rel="stylesheet" href="{% static 'assets/css/fancybox/jquery.fancybox.css' %}">
+		<link href="{% static 'assets/css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'assets/css/bootstrap-theme.css' %}" rel="stylesheet" />
+		<link rel="stylesheet" href="{% static 'assets/css/slippry.css' %}">
+		<link href="{% static 'assets/css/style.css' %}" rel="stylesheet" />
+		<link rel="stylesheet" href="{% static 'assets/color/default.css' %}">
+		<script src="{% static 'assets/js/modernizr.custom.js' %}"></script>
+		<!-- <script src="{% static 'assets/js/custom.js' %}"></script> -->
+		<!-- <script src="{% static 'contactform/contactform.js' %}"></script> -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+		<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+	</head>
+	<body>
+		<header>
+			<div id="navigation" class="navbar navbar-inverse navbar-fixed-top default" role="navigation">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="/home/"><img src="{% static 'assets/img/citrix-logo-black.jpg' %}"></img>&nbsp;<span style="font-size:80%">Answers</span></a>
+					</div>
+					<div class="navigation">
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"><nav>
+						    <ul class="nav navbar-nav navbar-right">
+						      <li class="current"><a href="/profile/{{ request.user.pk }}">{{ request.user.username|lower }}</a></li>
+								<li class="current"><a href="/logout/">Logout</a></li>
+							</ul></nav>
+						</div><!-- /.navbar-collapse -->
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="container">
+			<div class="row">
+				<section class="content">
+					<div class="col-md-8 col-md-offset-1" >
+						<!-- <h4 style="font-weight:bold">Search by Questions or Tags</h4>				 -->
+						<form action="/search/" method="post">
+							{% csrf_token %}
+							<div class="input-group">
+								<input id="search_term" type="text" class="form-control" name="search_term" placeholder="Search question or #tag..." style="height:40px"required>
+								<div class="input-group-btn">
+									<button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-search" aria-hidden="true"></i></button>
+								</div>
+							</div>
+
+						</form>
+					</div>
+					<div class="col-md-2 col-md-offset-1">
+						<div class="input-group-btn padding-right">
+							<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Ask Question</button>
+						</div>
+					</div>
+					<div class="col-md-7" >
+						<h4 style="font-weight:bold">Trending questions...</h4>
+						<div class="panel">
+
+							<div class="table-container">
+								<table class="table table-filter">
+									<tbody>
+										{% for question in question_list %}
+										<tr>
+											<td>
+												<div class="media">
+													<div class="media-body">
+														<a href="/question/{{ question.pk }}">
+															<h4 class="title" style=" line-height: 1.5">
+																{{ question.title }}
+																<span class="glyphicon  pull-right" style="font-family:inherit;color:crimson">{{ question.views }} Views</span>
+																<br><br>
+															</h4>
+														</a>
+														<div class="giveMeEllipsis">
+														<p class="summary" style="text-align:justify">{{ question.description }}</p>
+														</div>
+														{% for tag in question.tags.all %}
+														<span class="pull-left pagado" style="background-color:Lavender; font-size:14px">&nbsp;&nbsp;{{ tag.name }}&nbsp;&nbsp;</span>
+														<span class="pull-left pagado" >&nbsp;&nbsp;&nbsp;&nbsp;</span>
+														{% endfor %}
+														<br>
+														<span class="media-meta" style="margin-top: 10px" > Posted by <a href="/profile/{{ question.user.pk }}">{{ question.user.username }}</a> on {{ question.created_at | date:"D d M Y" }}</span>
+													</div>
+												</div>
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+					</div>
+					<div class="col-md-5">
+						<h4 style="font-weight:bold">Unanswered questions...</h4>
+						<div class="panel">
+
+							<div class="table-container">
+								<table class="table table-filter">
+									<tbody>
+										{% for question in unanswered_question_list %}
+										<tr>
+											<td>
+												<div class="media">
+													<div class="media-body">
+														<a href="/question/{{ question.pk }}">
+															<h4 class="title" style=" line-height: 1.5">
+																{{ question.title }}
+																<span class="glyphicon  pull-right" style="font-family:inherit;color:crimson">{{ question.views }} Views</span>
+															</h4>
+														</a>
+														<div class="giveMeEllipsis">
+														<p class="summary" style="text-align:justify">{{ question.description }}</p>
+														</div>
+														{% for tag in question.tags.all %}
+														<span class="pull-left pagado" style="background-color:Lavender; font-size:14px">&nbsp;&nbsp;{{ tag.name }}&nbsp;&nbsp;</span>
+														<span class="pull-left pagado" >&nbsp;&nbsp;&nbsp;&nbsp;</span>
+														{% endfor %}
+														<br>
+														<span class="media-meta" style="margin-top: 10px" > Posted by <a href="/profile/{{ question.user.pk }}">{{ question.user.username }}</a> on {{ question.created_at | date:"D d M Y" }}</span>
+													</div>
+												</div>
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+					</div>
+					<div class="content-footer"></div>
+				</div>
+			</section>
+
+		</div>
+	</div>
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h3 class="modal-title">Ask Question</h3>
+				</div>
+				<div class="modal-body" style="margin-left:20px">
+					<form action="/add-question/" method="post">
+						{% csrf_token %}
+						<h5><label for="new_question" style="font-weight: 100;">Title: </label></h5>
+					
+					<input id="new_question_title" type="text" name="new_question_title"   class="form-control" required /><i id="spamyes" class="fa fa-times"style="font-size:30; color:transparent" aria-hidden="true"></i><i  id="spamno"class="fa fa-check" style="font-size:30 ;color:transparent" aria-hidden="true"></i>
+						<h5 ><label style="font-weight: 100;">Description: </label></h5>
+						<textarea id="new_question_description" cols="67" rows="8"  class="form-control" name="new_question_description" required></textarea><br>
+						<br>
+				
+						<!-- <select name="question_tags"> -->
+						<!-- {% for tag in tag_list %} -->
+						<!-- <option value={{ tag.name }}>{{ tag.tagname }}</option> -->
+						<!-- {% endfor %} -->
+						<!-- </select> -->
+								<div class="input-group">
+									{% csrf_token %}
+									{{ tag_form }}
+
+									<script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+
+									{{ tag_form.media }}
+							</div>
+						<div class="row">
+							<div class="col-md-12">
+								<span id="fooBar">  </span>
+								<br><br>
+								<div class="input-group-btn">
+									<input id="question" type="submit" class="btn btn-primary btn-lg" value = "Submit">
+								</div>
+							</form>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</body>
+		{% block javascript %}
+		<script>
+			$("#new_question_title").blur(function(){
+				console.log("Why not?");
+				var title_text = $("#new_question_title").val();
+
+				console.log(title_text);
+
+				$.ajax({
+					url: '/ajax/check_spam',
+					data : {
+						'title_text': title_text
+					},
+
+					dataType: 'json',
+					success: function(data){
+						console.log(data.spam)
+						if(data.spam == "True"){
+
+							$("#new_question_title").css({"border-color": "red"});
+							$("#spamyes").css({"color": "red"});
+							$("#spamno").css({"color": "transparent"});
+							document.getElementById("question").disabled=true;
+						}
+						else{
+							$("#new_question_title").css({"border-color": "green"});
+							$("#spamno").css({"color": "green"});
+							$("#spamyes").css({"color": "transparent"});
+							document.getElementById("question").disabled=false;
+						}
+					}
+				});
+			});
+		</script>
+		<script>
+		function add(type,value) {
+
+		//Create an input type dynamically.
+		var element = document.createElement("input");
+
+		//Assign different attributes to the element.
+		element.setAttribute("type", type);
+		element.setAttribute("value", value);
+		element.setAttribute("name", "question_tags");
+		element.setAttribute("size", "10");
+		element.setAttribute("disabled", "disabled");
+		element.setAttribute("style", "margin-right:15px;margin-left15px;margin-top:15px;margin-bottom:15px;background-color:Lavender");
+		var foo = document.getElementById("fooBar");
+		document.getElementById("tags").value="";
+		document.getElementById("multiple_tags").value += ","+value;
+		//Append the element in page (in span).
+		foo.appendChild(element);
+
+		}
+		$('#myModal').on('loaded.bs.modal', function () {
+		console.log("Whatwhatw");
+		$(this).find('form').trigger('reset');
+		})
+		</script>
+
+		{% endblock %}
+
+		</html>

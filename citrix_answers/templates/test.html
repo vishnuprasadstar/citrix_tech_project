@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <header>
+    <h1>Citrix Answers Login</h1>
+    {% if user.is_authenticated %}
+    Hi {{ user.username }}!
+    {{what}}
+    {% else %}
+    You are not logged in
+    {% endif %}
+  </header>
+  <hr>
+  <hr>
+</body>
+</html>

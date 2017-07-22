@@ -1,0 +1,100 @@
+{% load staticfiles %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Citrix Answers</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="" />
+		<meta name="author" content="" />
+		<link rel="stylesheet" href="{% static 'assets/css/questions_list.css' %}">
+		<link rel="javascript" href="{% static 'assets/js/questions_list.js' %}">
+		<!-- styles -->
+		<link rel="stylesheet" href="{% static 'assets/css/fancybox/jquery.fancybox.css' %}">
+		<link href="{% static 'assets/css/bootstrap.css' %}" rel="stylesheet" />
+		<link href="{% static 'assets/css/bootstrap-theme.css' %}" rel="stylesheet" />
+		<link rel="stylesheet" href="{% static 'assets/css/slippry.css' %}">
+		<link href="{% static 'assets/css/style.css' %}" rel="stylesheet" />
+		<link rel="stylesheet" href="{% static 'assets/color/default.css' %}">
+		<script src="{% static 'assets/js/modernizr.custom.js' %}"></script>
+		<!-- <script src="{% static 'assets/js/custom.js' %}"></script> -->
+		<!-- <script src="{% static 'contactform/contactform.js' %}"></script> -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<header>
+			<div id="navigation" class="navbar navbar-inverse navbar-fixed-top default" role="navigation">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="/home/"><img src="{% static 'assets/img/citrix-logo-black.jpg' %}"></img>&nbsp;<span style="font-size:80%">Answers</span></a>
+					</div>
+					<div class="navigation">
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"><nav>
+							<ul class="nav navbar-nav navbar-right">
+								<li class="current"><a href="/login">Logout</a></li>
+							</ul></nav>
+						</div><!-- /.navbar-collapse -->
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="container-fluid">
+			<div class="row">
+				<section class="content">
+					<div class="col-md-12">
+						<h3>Search Results...</h3>
+						{% if search_question_list %}
+				
+								<div class="table-container">
+									<table class="table table-filter">
+										<tbody>
+											{% for question in search_question_list %}
+											<tr>
+												<td>
+													<div class="media">
+														<a href="#" class="pull-left"><img src="{% static 'assets/img/User_Icon.jpg' %}" class="media-photo"></a>
+														<div class="media-body">
+															<a href="/question/{{ question.pk }}">
+																<h4 class="title" style="color=Black" >
+																	{{ question.title }}
+																	<span class="glyphicon  pull-right">{{ question.views }} Views</span>
+																</h4>
+															</a>
+															<p class="summary">{{ question.description }}</p>
+															{% for tag in question.tags.all %}
+															<span class="pull-left pagado" style="background-color:Lavender">{{ tag.name }}</span>
+															<span class="pull-left pagado" >&nbsp;&nbsp;&nbsp;&nbsp;</span>
+															{% endfor %}
+															<br>
+															<span class="media-meta" style="margin-top: 10px" > Posted by {{ question.user.username }} on {{ question.created_at | date:"D d M Y" }}</span>
+														</div>
+													</div>
+												</td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+						
+						{% else %}
+							<div>
+								Your search returned no matches.
+							</div>
+						{% endif %}
+					</div>
+					<div class="col-md-5">
+					</div>
+					<div class="content-footer"></div>
+				</div>
+			</section>
+
+		</div>
+	</div>
+</body>
+</html>
